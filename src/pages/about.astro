@@ -1,0 +1,187 @@
+---
+import Logo from "../assets/Logo.astro";
+import Portafolio from "../assets/Portafolio.astro";
+import All from "../assets/All.astro";
+import Layout from "../layouts/Layout.astro";
+---
+<Layout ttl='Acerca de'>
+    <main>
+        <header>
+            <a href="/" title="Volver al visualizador">
+                <svg viewBox="0 0 24 16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 8H2l6 6-6-6 6-6"/></svg>
+                <span>Volver al visualizador</span>
+            </a>
+            <h1><Logo/> Video Capture Online <small>VCO v1.0.0</small></h1>
+            <p>Visualizador de stream UVC y pantallas en tiempo real de alto rendimiento.</p>
+        </header>
+        <section>
+            <article>
+                <h2><All id={1}/> ¿Por qué VCO?</h2>
+                <p>
+                    Programas tradicionales como OBS consumen recursos excesivos en composición y recodificación. 
+                    VCO obtiene el stream directo vía <code>getUserMedia</code> / <code>getDisplayMedia</code>, asignándolo al elemento <code>video</code> en un pipeline <strong>zero-copy</strong> con aceleración por hardware directa, permitiendo un <strong>rendimiento sumamente eficaz</strong> sin sobrecargar la CPU.
+                </p>
+            </article>
+            <article>
+                <h2><All id={2}/> Cero Instalación</h2>
+                <p>
+                    Multiplataforma y plug & play. Funciona directamente en cualquier navegador moderno sobre <strong>macOS, Windows, Linux, Android e iOS</strong> con solo abrir una URL.
+                </p>
+            </article>
+            <article>
+                <h2><All id={3}/> Público Objetivo</h2>
+                <p>
+                    Diseñado para todo tipo de <strong>dispositivos de gama baja o con recursos limitados</strong> (celulares, laptops y computadoras de escritorio) que requieran monitoreo directo de capturadoras UVC o pantallas secundarias sin instalar software pesado.
+                </p>
+            </article>
+            <article>
+                <h2><All id={4}/> Interfaz Limpia</h2>
+                <p>
+                    Estilos minimalistas y funcionales, soportando pantalla completa (tecla <code>F</code>), los controles se ocultan automáticamente tras 3 segundos de inactividad del cursor, opciones rápidas y directas.
+                </p>
+            </article>
+            <article>
+                <h2><All id={5}/> Planes a Futuro</h2>
+                <p>
+                    Exploración de futuras páginas y módulos enfocados en grabación local en navegador, transmisión directa o personalización de interfaces similares a OBS.
+                </p>
+            </article>
+        </section>
+        <footer>
+            <h2>Creado por Abel Trejo Vargas</h2>
+            <p>Ing. en Desarrollo y Gestión de Software</p>
+            <a href="https://trejodev.vercel.app" target="_blank" rel="noopener noreferrer"><Portafolio/> Visita mi portafolio</a>
+            <nav>
+                <a href="https://github.com/trejoabel" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://www.linkedin.com/in/trejo-dev" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="https://x.com/Trejo_Dev" target="_blank" rel="noopener noreferrer">X</a>
+                <a href="https://www.instagram.com/trejo_dev" target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a href="https://www.youtube.com/@TrejoDEV" target="_blank" rel="noopener noreferrer">YouTube</a>
+                <a href="https://www.tiktok.com/@trejodev" target="_blank" rel="noopener noreferrer">TikTok</a>
+            </nav>
+        </footer>
+    </main>
+</Layout>
+<style>
+body{overflow-y:auto}
+main{
+    display:flex;
+    gap:42px;
+    padding-top:32px;
+    flex-flow:column;
+    place-items:center;;
+    & a{text-decoration:none;transition:.3s}
+    & header{
+        display:flex;
+        flex-flow:column;
+        place-items:center;
+        & a{
+            display:flex;
+            place-items:center;
+            gap:4px;
+            color:#888;
+            font-size:12px;
+            padding:4px 12px;
+            border:1px solid #fff3;
+            border-radius:5rem;
+            transform:translateY(8px);
+            font-weight:700;
+            &:hover{
+                color:#f09;
+                border-color:#f098;
+                & svg{stroke:#f09}
+            }
+            & svg{stroke:#888;fill:none;width:24px}
+        }
+        & h1{
+            display:flex;
+            place-content:center;
+            place-items:center;
+            gap:8px;
+            & svg{width:48px}
+            & small{
+                font-size:11px;
+                font-weight:700;
+                color:#f09;
+                background:#f092;
+                border:1px solid #f098;
+                padding:4px 10px;
+                border-radius:10px;
+                text-transform:uppercase;
+                letter-spacing:.7px;
+            }
+        }
+        & p{font-size:15px;color:#aaa}
+    }
+    & section{
+        display:flex;
+        flex-flow:wrap;
+        place-content:center;
+        gap:16px;
+        max-width:800px;
+        width:95%;
+        & article{
+            flex:1 1 260px;
+            background:#fff1;
+            border:1px solid #fff3;
+            border-radius:12px;
+            padding:20px;
+            display:flex;
+            flex-flow:column;
+            gap:8px;
+            transition:.3s;
+            &:hover{border-color:#f098}
+            & h2{
+                display:flex;
+                gap:6px;
+                place-items:center;
+                & svg{width:32px}
+            }
+            & p{
+                font-size:14px;
+                color:#999;
+                line-height:1.5;
+                & strong{color:#fde}
+                & code{
+                    background:#f092;
+                    color:#f09;
+                    padding:2px 4px;
+                    border-radius:4px;
+                    font-size:12px;
+                }
+            }
+        }
+    }
+    & footer{
+        display:flex;
+        flex-flow:column;
+        place-items:center;
+        font-size:14px;
+        & p,& nav a{color:#888}
+        & > a{
+            background:#f09;
+            color:#000;
+            font-weight:700;
+            padding:6px 12px;
+            border-radius:8px;
+            margin:16px 0;
+            gap:4px;
+            display:flex;
+            place-content:center;
+            place-items:center;
+            & svg{
+                width:26px;
+                fill:#000;
+            }
+            &:hover{background:#f09}
+        }
+        & nav{
+            display:flex;
+            flex-flow:wrap;
+            place-content:center;
+            gap:12px 16px;
+            & a:hover{color:#f09}
+        }
+    }
+}
+</style>

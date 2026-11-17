@@ -1,0 +1,87 @@
+---
+interface Props{ttl:string}
+const {ttl}=Astro.props;
+const desc='Visualizador de stream UVC y cámaras en tiempo real',site='https://vco.vercel.app'
+---
+<!doctype html>
+<html lang='es'>
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" sizes="48x48"/>
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+	<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png"/>
+	<link rel="manifest" href="/site.webmanifest"/>
+
+	<meta http-equiv="Cache-Control" content="max-age=31536000">
+	<meta name="author" content="Abel Trejo Vargas">
+	<meta name="copyright" content="Abel Trejo Vargas"/>
+	<title>VCO | {ttl}</title>
+	<meta name="robots" content="index,follow"/>
+	<meta name="description" content={desc}>
+	
+	<meta property="og:url" content={site}>
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Video Capture Online">
+	<meta property="og:description" content={desc}>
+	<meta property="og:image" content={`${site}/og.jpg`}>
+	<meta name="twitter:card" content="summary_large_image">
+	<meta property="twitter:domain" content="vco.vercel.app">
+	<meta property="twitter:url" content={site}>
+	<meta name="twitter:title" content="Video Capture Online">
+  	<meta property="og:locale" content='es' />
+	<meta name="twitter:description" content={desc}>
+	<meta name="twitter:image" content={`${site}/og.jpg`}>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Video Capture Online",
+  "alternateName": "VCO",
+  "url": "https://vco.vercel.app",
+  "inLanguage": ["es"],
+  "description": "Visualizador de stream UVC y cámaras en tiempo real",
+  "publisher": {
+    "@type": "Person",
+    "name": "Abel Trejo Vargas",
+    "url": "https://trejodev.vercel.app",
+    "sameAs": [
+      "https://www.instagram.com/trejo_dev",
+      "https://www.youtube.com/@TrejoDEV",
+      "https://www.tiktok.com/@trejodev",
+      "https://github.com/trejoabel",
+      "https://www.linkedin.com/in/trejo-dev",
+      "https://x.com/Trejo_Dev"
+    ]
+  }
+}
+</script>
+</head>
+<body>
+    <main>
+        <slot/>
+    </main>
+</body>
+</html>
+<style is:global>
+*::selection{color:#fff;background:#f09}
+:root{
+	color-scheme:dark;
+	scrollbar-width:thin;
+	scrollbar-color:#f09 #0000;
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;will-change:contents}
+body{
+	max-width:100dvw;
+	max-height:100dvh;
+    overflow:hidden;
+}
+svg{
+	transition:.3s;
+	aspect-ratio:1/1;
+	height:auto;
+	fill:#888;
+}
+</style>

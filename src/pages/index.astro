@@ -1,0 +1,372 @@
+---
+import Devices from "../assets/Devices.astro";
+import FPS from "../assets/FPS.astro";
+import Res from "../assets/Res.astro";
+import FullScreen from "../assets/FullScreen.astro";
+import Layout from "../layouts/Layout.astro";
+---
+<Layout ttl='Visualizador'>
+	<video autoplay playsinline muted></video>
+	<nav>
+		<fieldset>
+			<legend>
+				<Devices />
+				Fuente
+			</legend>
+				<select id="dvc" name="dvc">
+					<option value="" disabled selected>Buscando dispositivos...</option>
+				</select>
+		</fieldset>
+		<fieldset>
+			<legend>
+				<Res />
+				Resolución
+			</legend>
+				<select id="res" name="res">
+					<option value="max">Máxima</option>
+					<option value="1920x1080" selected>1920 × 1080</option>
+					<option value="1280x720">1280 × 720</option>
+				</select>
+		</fieldset>
+		<fieldset>
+			<legend>
+				<FPS/>
+				FPS
+			</legend>
+				<select id="fps" name="fps">
+					<option value="max">Máximo</option>
+					<option value="60" selected>60 fps</option>
+					<option value="30">30 fps</option>
+					<option value="24">24 fps</option> 
+				</select>
+		</fieldset>
+		<hr/>
+		<aside>
+			<output title="Resolución y tasa de refresco detectadas">--</output>
+			<button type="button" title="Pantalla completa(F)">
+				<FullScreen />
+			</button>
+		</aside>
+	</nav>
+</Layout>
+<style>
+body{
+	display:flex;
+	&[data-idle]{
+		cursor:none;
+		& nav{
+			opacity:0;
+			transform:translate(-50%, -10px);
+			user-select:none;
+			pointer-events:none;
+		}
+	}
+	& video{
+		width:100%;
+		height:100%;
+		object-fit:contain;
+		background:none;
+		user-select:none;
+	}
+	& nav{
+		filter:drop-shadow(0 0 8px #000);
+		position:absolute;
+		top:16px;
+		left:50%;
+		transform:translateX(-50%);
+		z-index:1;
+		transition:.35s;
+		pointer-events:auto;
+		max-width:95dvw;
+		display:flex;
+		gap:8px;
+		& fieldset{
+			display:flex;
+			flex-flow:column;
+			border:1px solid #fff4;
+			outline:none;
+			padding:1px 8px 3px 8px;
+			border-radius:8px;
+			background:none;
+			transition:.3s;
+			&:hover,&:focus,&:active,&:focus-within{
+				border-color:#f098;
+				& legend{color:#f09}
+				& svg{fill:#f09}
+			}
+			& legend{
+				display:flex;
+				gap:4px;
+				font-size:10px;
+				padding:0 4px;
+				width:fit-content;
+				font-weight:700;
+				text-transform: uppercase;
+				letter-spacing:.3px;
+				place-content:center;
+				place-items:center;
+				color:#888;
+				transition:.3s;
+				user-select:none;
+				pointer-events:none;
+				& svg{width:12px}
+			}
+			& select{
+				appearance:none;
+				-webkit-appearance:none;
+				border:none;
+				outline:none;
+				background:none;
+				font-size:13px;
+				cursor:pointer;
+				outline:none;
+				transition:.3s;
+				max-width:200px;
+				text-overflow:ellipsis;
+				white-space:nowrap;
+				& option{
+					background:#000;
+					padding:8px;
+				}
+			}
+		}
+		& hr{
+			margin:7px 0;
+			border:none;
+			border-left:1px solid #fff4;
+		}
+		& aside{
+			display:flex;
+			place-items:center;
+			gap:8px;
+			& output{
+				font-size:8px;
+				font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+				border:1px solid #f098;
+				color:#fff;
+				background:#f092;
+				padding:4px 8px;
+				border-radius:8px;
+				white-space:nowrap;
+				user-select:none;
+			}
+			& button{
+				background:none;
+				border:none;
+				width:18px;
+				height:18px;
+				display:flex;
+				place-items:center;
+				place-content:center;
+				cursor:pointer;
+				&:hover,&:focus,&:active,&:focus-within{
+					& svg{fill:#f09}
+				}
+			}
+		}
+	}
+}
+@media(max-width:768px){
+	body{
+		&[data-idle]{
+			& nav{transform:translate(-50%, 10px)}
+		}
+		& nav{
+			top:auto;
+			bottom:16px;
+			gap:6px 4px;
+			place-content:center;
+			flex-flow:wrap;
+			width:100%;
+			& hr{display:none}
+		}
+	}
+}
+</style>
+<script>
+	const body=document.querySelector('body') as HTMLElement;
+	const video=document.querySelector('video') as HTMLVideoElement;
+	const nav=document.querySelector('nav') as HTMLElement;
+	const dvc=document.getElementById('dvc') as HTMLSelectElement;
+	const res=document.getElementById('res') as HTMLSelectElement;
+	const fps=document.getElementById('fps') as HTMLSelectElement;
+	const stats=document.querySelector('output') as HTMLOutputElement;
+	const btn=document.querySelector('button') as HTMLButtonElement;
+
+	let strm:MediaStream | null=null;
+	let hide:number | undefined;
+	const SCREEN='__screen_share__';
+
+	function wakeUp(){
+		body.removeAttribute('data-idle');
+
+		if(hide) clearTimeout(hide);
+		hide=window.setTimeout(()=>{
+			const activeTag=document.activeElement?.tagName.toLowerCase();
+			if(activeTag !=='select' && activeTag !=='button'){
+				body.setAttribute('data-idle','');
+			}
+		}, 3000);
+	}
+
+	['mousemove','pointerdown','touchstart','keydown'].forEach(e=>{window.addEventListener(e,wakeUp,{passive:true})});
+
+	nav.addEventListener('mouseenter',()=>{
+		if(hide) clearTimeout(hide);
+		body.removeAttribute('data-idle');
+	});
+	nav.addEventListener('mouseleave',()=>{wakeUp()});
+
+	btn.addEventListener('click', toggleFullscreen);
+	window.addEventListener('keydown',(e)=>{
+		if(e.key==='f'||e.key==='F'){
+			toggleFullscreen();
+		}
+	});
+
+	function toggleFullscreen(){
+		if(!document.fullscreenElement){
+			document.documentElement.requestFullscreen().catch(()=>{});
+		} else{
+			document.exitFullscreen().catch(()=>{});
+		}
+	}
+
+	async function listDvc(selectedDeviceId?:string){
+		const devices=await navigator.mediaDevices.enumerateDevices();
+		const videoDevices=devices.filter(d=> d.kind==='videoinput');
+
+		dvc.innerHTML='';
+
+		videoDevices.forEach((device, index)=>{
+			const option=document.createElement('option');
+			option.value=device.deviceId;
+			option.text=device.label||`Cámara / Capturadora ${index + 1}`;
+			dvc.appendChild(option);
+		});
+
+		const screenOption=document.createElement('option');
+		screenOption.value=SCREEN;
+		screenOption.text='🖥️ Compartir Pantalla';
+		dvc.appendChild(screenOption);
+
+		if(selectedDeviceId && [...dvc.options].some(o=> o.value===selectedDeviceId))dvc.value=selectedDeviceId
+		else if(dvc.options.length > 0)dvc.selectedIndex=0
+	}
+
+	function parseResolution(value:string){
+		if(value==='max'){
+			return{ width:{ ideal:1920 }, height:{ ideal:1080 } };
+		}
+		const [w, h]=value.split('x').map(Number);
+		return{
+			width:{ ideal:w },
+			height:{ ideal:h }
+		};
+	}
+
+	function parseFps(value:string){
+		if(value==='max'){
+			return{ideal:60};
+		}
+		return{ ideal:Number(value) };
+	}
+
+	async function stream(){
+		const selectedSource=dvc.value;
+		const resVal=res.value;
+		const fpsVal=fps.value;
+
+		if(strm){
+			strm.getTracks().forEach(track=> track.stop());
+			strm=null;
+		}
+		try{
+			if(selectedSource===SCREEN){
+				strm=await navigator.mediaDevices.getDisplayMedia({
+					video:{frameRate:parseFps(fpsVal)},
+					audio:false
+				});
+				strm.getVideoTracks()[0].addEventListener('ended',()=>{
+					if(dvc.options[0]?.value){
+						dvc.selectedIndex=0;
+						stream();
+					}
+				});
+			} else{
+				const resConstraint=parseResolution(resVal);
+				const fpsConstraint=parseFps(fpsVal);
+
+				const constraints:MediaStreamConstraints={
+					video:{
+						deviceId:selectedSource ?{ exact:selectedSource } :undefined,
+						width:resConstraint.width,
+						height:resConstraint.height,
+						frameRate:fpsConstraint
+					},
+					audio:false
+				};
+				strm=await navigator.mediaDevices.getUserMedia(constraints);
+			}
+
+			video.srcObject=strm;
+			updateStats();
+		} catch(err){
+			console.warn('Fallo con constraints específicas, reintentando básico...', err);
+			try{
+				strm=await navigator.mediaDevices.getUserMedia({
+					video:selectedSource ?{ deviceId:{ exact:selectedSource } } :true,
+					audio:false
+				});
+				video.srcObject=strm;
+				updateStats();
+			} catch(fallbackErr){
+				console.error('Error al abrir dispositivo:', fallbackErr);
+				stats.textContent='Error al abrir';
+			}
+		}
+	}
+	function updateStats(){
+		if(!strm) return;
+		const track=strm.getVideoTracks()[0];
+		if(!track) return;
+
+		const checkAndDisplay=()=>{
+			const settings=track.getSettings();
+			const width=settings.width||video.videoWidth||0;
+			const height=settings.height||video.videoHeight||0;
+			const fps=Math.round(settings.frameRate||0);
+
+			if(width && height){
+				stats.textContent=`${width}×${height}${fps ? ` @ ${fps}fps` :''}`;
+			} else{
+				stats.textContent='Activo';
+			}
+		};
+
+		video.onloadedmetadata=checkAndDisplay;
+		setTimeout(checkAndDisplay, 500);
+	}
+	dvc.addEventListener('change',()=> stream());
+	res.addEventListener('change',()=> stream());
+	fps.addEventListener('change',()=> stream());
+	navigator.mediaDevices.addEventListener('devicechange', async()=>{
+		const currentSelected=dvc.value;
+		await listDvc(currentSelected);
+	});
+	async function init(){
+		wakeUp();
+		try{
+			const initialStream=await navigator.mediaDevices.getUserMedia({ video:true, audio:false });
+			initialStream.getTracks().forEach(t=> t.stop());
+
+			await listDvc();
+			if(dvc.value)await stream()
+		} catch(err){
+			console.warn('Permiso o detección inicial:', err);
+			await listDvc();
+			stats.textContent='Sin permiso';
+		}
+	}
+	init();
+</script>

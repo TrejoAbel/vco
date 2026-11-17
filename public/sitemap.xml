@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://vco.vercel.app/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>never</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vco.vercel.app/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vco.vercel.app/" />
+  </url>
+  <url>
+    <loc>https://vco.vercel.app/about</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>never</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://vco.vercel.app/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vco.vercel.app/about" />
+  </url>
+</urlset>

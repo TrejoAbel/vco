@@ -1,0 +1,10 @@
+# Video Capture Online (VCO)
+
+## Estructura de URLs
+- [Página Principal](https://vco.vercel.app/) Visualizador de stream UVC y cámaras en tiempo real.
+- [Acerca de](https://vco.vercel.app/about) Información general sobre el proyecto.
+
+## Objetivo
+Tener un visualizador de video para dispositivos UVC sumamente rápido y eficiente en comparación a software como OBS listo para ser usado en cualquier plataforma.
+
+> Developed by Abel Trejo Vargas
